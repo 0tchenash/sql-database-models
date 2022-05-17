@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 api = Api(app)
 api.app.config['RESTX_JSON'] = {'ensure_ascii': False, 'indent': 4}
-
+#Создаем неймспейсы
 movies_ns = api.namespace('movies')
 director_ns = api.namespace('directors')
 genre_ns = api.namespace('genres')
@@ -31,7 +31,7 @@ class Movie(db.Model):
     director_id = db.Column(db.Integer, db.ForeignKey("director.id"))
     director = db.relationship("Director")
 
-
+#Схема для сериализации
 class MovieSchema(Schema):
     id = fields.Int()
     title = fields.Str()
@@ -48,7 +48,7 @@ class Director(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
 
-
+#Схема для сериализации
 class DirectorSchema(Schema):
     id = fields.Int()
     name = fields.Str()
@@ -59,7 +59,7 @@ class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
 
-
+#Схема для сериализации
 class GenreSchema(Schema):
     id = fields.Int()
     name = fields.Str()
