@@ -71,13 +71,21 @@ class MovieView(Resource):
         director_id = request.args.get('director_id')
         genre_id = request.args.get('genre_id')
 
+        try:
+            page = int(request.values.get('page'))
+            lim = int(request.values.get('limit'))
+        except (TypeError, ValueError):
+            page = 1
+            lim = Movie.query.count()
+        offs = (page - 1) * lim
+
         movies = Movie.query
 
         if director_id:
             movies = movies.filter(Movie.director_id == director_id)
         if genre_id:
             movies = movies.filter(Movie.genre_id == genre_id)
-        movies = movies.all()
+        movies = movies.limit(lim).offset(offs).all()
         return MovieSchema(many=True).dump(movies), 200
 
     def post(self):
@@ -110,7 +118,6 @@ class MoviesView(Resource):
             movie.rating = data['rating']
             movie.genre_id = data['genre_id']
             movie.director_id = data['director_id']
-
 
             db.session.add(movie)
             db.session.commit()
